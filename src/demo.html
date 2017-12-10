@@ -1,0 +1,82 @@
+<style>
+  * {
+    font-family: Verdana, Arial, sans-serif;
+  }
+  #start_button {
+    border: 0;
+    background-color:transparent;
+    padding: 0;
+  }
+  .center {
+    padding: 10px;
+    text-align: center;
+  }
+  .right {
+    float: right;
+  }
+  .left {
+    float: left;
+  }
+
+</style>
+<h1 class="center" id="headline">
+    Ekstep Word Complexity Compute Demonstration</h1>
+<div class="center" id="div_language">
+  <p>Select Language:
+  <select id="select_language">
+    <option value="en-IN">English</option> 
+    <option value="hi-IN">Hindi</option> 
+    <option value="kn-IN">Kannada</option> 
+    <option value="te-IN">Telugu</option> 
+    <option value="ta-IN">Tamil</option> 
+  </select>
+  </p>
+</div>
+<div class="center">
+  <button id="start_button" onclick="toggleStartStop()"">
+    <img id="start_img" src="mic.gif" alt="Start"></button>
+  <textarea id="textarea" cols=80></textarea>  
+</div>
+<script type="text/javascript">
+/*var langs =
+ [['English', 'en-IN'],
+ ['Hindi', 'hi-IN'],
+ ['Kannada','kn-IN'],
+ ['Telugu', 'te-IN'],
+ ['Tamil', 'ta-IN']];
+
+for (var i = 0; i < langs.length; i++) {
+  select_language.options[i] = new Option(langs[i][0], langs[i][1]);
+}
+select_language.selectedIndex = 0;*/
+var recognizing;
+var recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+reset();
+recognition.onend = reset();
+
+recognition.onresult = function (event) {
+  for (var i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      textarea.value += event.results[i][0].transcript;
+    }
+  }
+}
+
+function reset() {
+  recognizing = false;
+  start_img.src = 'mic.gif';
+}
+
+function toggleStartStop() {
+  if (recognizing) {
+    recognition.stop();
+    reset();
+  } else {
+    recognition.lang = select_language.value;
+    recognition.start();
+    recognizing = true;
+    start_img.src = 'mic-animate.gif';
+  }
+}
+</script>
